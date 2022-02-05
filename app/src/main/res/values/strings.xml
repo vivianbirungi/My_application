@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">My Application</string>
+    <string name="btn_loc_gps">Get GPS Location</string>
+    <string name="btn_loc_net">Get Location by Network</string>
+
+    <string name="txt_view_lat">Latitude:</string>
+    <string name="txt_view_lon">Longitude:</string>
+    <string name="txt_view_alt">Altitude:</string>
+
+    <string name="GPS_permissions">You must accept the permissions to use the application</string>
+    <string name="btn_watch_permissions">Watch Permissions</string>
+    <string name="btn_close">Close</string>
+
+    <string name="GPS_disabled">It seems that your GPS is disabled, do you want to activate it?</string>
+    <string name="Network_disabled">It seems that your connection is disabled, do you want to activate it?</string>
+    <string name="btn_yes">Yes</string>
+    <string name="btn_no">No</string>
+    <string name="title_activity_camera">Camera</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+</resources>
