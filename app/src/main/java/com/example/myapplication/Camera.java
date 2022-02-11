@@ -5,6 +5,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -14,12 +15,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Base64;
 import android.util.Log;
@@ -43,6 +47,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.UUID;
 
@@ -62,14 +68,22 @@ public class Camera extends AppCompatActivity {
     private String txtViewLatNetwork;
     private String txtViewLongNetwork;
     private String  txtViewAltNetwork;
+    private Uri imageUr;
     private TextView locations;
     private LocationManager mLocationManagerNetwork;
     private LocationListener mLocationListenerNetwork;
     private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Images");
     private StorageReference reference = FirebaseStorage.getInstance().getReference();
+    public final String APP_TAG = "MyCustomApp";
+    public final static int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 1034;
+    public String photoFileName = "photo.jpg";
+    File photoFile;
+    private Uri imageUri ;
 
-    private byte [] imageUri ;
+
     private ProgressBar progressBar;
+    String currentPhotoPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,25 +95,34 @@ public class Camera extends AppCompatActivity {
         locations = findViewById(R.id.location);
         progressBar = findViewById(R.id.progressBar);
         textInputLayout = findViewById(R.id.textInputLayout);
-        camerabtn.setOnClickListener(new View.OnClickListener() {
+
+        findViewById(R.id.camerabtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                String filename = "photo";
+                File storageDirectory = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                try {
+                    File imageFile = File.createTempFile(filename,".jpg", storageDirectory);
+                    currentPhotoPath = imageFile.getAbsolutePath();
 
-                {
-                    if (ContextCompat.checkSelfPermission(Camera.this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                        ActivityCompat.requestPermissions(Camera.this, new String[]{Manifest.permission.CAMERA}, MY_CAMERA_PERMISSION_CODE);
-                    } else {
-                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                        getPositionGPS();
-                    }
+                     imageUri = FileProvider.getUriForFile(Camera.this, "com.example.myapplication.fileprovider", imageFile);
+                    Intent intent = new Intent (MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+                    startActivityForResult(intent,1);
+                    getPositionGPS();
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         });
-        btnsend.setOnClickListener(new View.OnClickListener() {
+
+
+
+
+    btnsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (imageUri != null) {
+                if (currentPhotoPath != null) {
                     uploadToFirebase(imageUri);
                 } else {
                         Toast.makeText(Camera.this,"upload is empty", Toast.LENGTH_SHORT).show();
@@ -107,6 +130,41 @@ public class Camera extends AppCompatActivity {
             }
         });
 
+    }
+    public void onLaunchCamera(View view) {
+        // create Intent to take a picture and return control to the calling application
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Create a File reference for future access
+        photoFile = getPhotoFileUri(photoFileName);
+
+        // wrap File object into a content provider
+        // required for API >= 24
+        // See https://guides.codepath.com/android/Sharing-Content-with-Intents#sharing-files-with-api-24-or-higher
+        Uri fileProvider = FileProvider.getUriForFile(Camera.this, "com.example.myapplication.fileprovider", photoFile);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileProvider);
+
+        // If you call startActivityForResult() using an intent that no app can handle, your app will crash.
+        // So as long as the result is not null, it's safe to use the intent.
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            // Start the image capture intent to take photo
+            startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+        }
+    }
+    public File getPhotoFileUri(String fileName) {
+        // Get safe storage directory for photos
+        // Use `getExternalFilesDir` on Context to access package-specific directories.
+        // This way, we don't need to request external read/write runtime permissions.
+        File mediaStorageDir = new File(getExternalFilesDir(Environment.DIRECTORY_PICTURES), APP_TAG);
+
+        // Create the storage directory if it does not exist
+        if (!mediaStorageDir.exists() && !mediaStorageDir.mkdirs()){
+            Log.d(APP_TAG, "failed to create directory");
+        }
+
+        // Return the file target for the photo based on filename
+        File file = new File(mediaStorageDir.getPath() + File.separator + fileName);
+
+        return file;
     }
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults)
@@ -130,20 +188,37 @@ public class Camera extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+        Log.d("output", String.valueOf((requestCode)));
+        if (requestCode == 1 && resultCode == RESULT_OK) {
 
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-
-            imageview.setImageBitmap(photo);
+//            Bitmap photo = (Bitmap) data.getExtras().get("data");
+//
+//            imageview.setImageBitmap(photo);
+//            camerabtn.setVisibility(View.GONE);
+//            videobtn.setVisibility(View.GONE);
+//            textInputLayout.setVisibility(View.VISIBLE);
+//            btnsend.setVisibility(View.VISIBLE);
+//// set url
+//            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//            photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
+////             imageUri = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+//            imageUri = baos.toByteArray();
+//            try {
+//
+//                Bitmap thumbnail = MediaStore.Images.Media.getBitmap(
+//                        getContentResolver(), imageUr);
+//                imageview.setImageBitmap(thumbnail);
+//               imageurl = getRealPathFromURI(imageUri);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+            Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+            ImageView imageView = findViewById(R.id.imageview);
+            imageView.setImageBitmap(bitmap);
             camerabtn.setVisibility(View.GONE);
             videobtn.setVisibility(View.GONE);
             textInputLayout.setVisibility(View.VISIBLE);
             btnsend.setVisibility(View.VISIBLE);
-// set url
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            photo.compress(Bitmap.CompressFormat.PNG, 100, baos);
-//             imageUri = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
-            imageUri = baos.toByteArray();
         }
     }
 
@@ -221,14 +296,14 @@ public class Camera extends AppCompatActivity {
             }).show();
         }
     }
-    private void uploadToFirebase(byte[] uri){
+    private void uploadToFirebase(Uri uri){
         String uniqueID = UUID.randomUUID().toString();
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + uniqueID);
         Long datetime = System.currentTimeMillis();
         Log.d("lat and lon",txtViewLatGPS + txtViewLongGPS );
 
         Timestamp timestamp = new Timestamp(datetime);
-        fileRef.putBytes(uri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
+        fileRef.putFile(uri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
             Model model = new Model(uri1.toString(), txtViewLatGPS,txtViewLongGPS,timestamp );
             String modelId = root.push().getKey();
             root.child(modelId).setValue(model);

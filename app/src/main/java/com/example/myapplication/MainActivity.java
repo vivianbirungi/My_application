@@ -47,31 +47,40 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        txtViewLatGPS = findViewById(R.id.txtViewLatGPS);
-        txtViewLongGPS = findViewById(R.id.txtViewLonGPS);
-        txtViewAltGPS = findViewById(R.id.txtViewAltGPS);
+//        txtViewLatGPS = findViewById(R.id.txtViewLatGPS);
+//        txtViewLongGPS = findViewById(R.id.txtViewLonGPS);
+//        txtViewAltGPS = findViewById(R.id.txtViewAltGPS);
 
-        txtViewLatNetwork = findViewById(R.id.txtViewLatNetwork);
-        txtViewLongNetwork = findViewById(R.id.txtViewLonNetwork);
-        txtViewAltNetwork = findViewById(R.id.txtViewAltNetwork);
+//        txtViewLatNetwork = findViewById(R.id.txtViewLatNetwork);
+//        txtViewLongNetwork = findViewById(R.id.txtViewLonNetwork);
+//        txtViewAltNetwork = findViewById(R.id.txtViewAltNetwork);
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                requestLocationPermission();
 
-        btnGPS = findViewById(R.id.btnGPSLoc);
-        btnNetwork = findViewById(R.id.btnNetworkLoc);
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 1);
+            } else {
+
+            }
+        }
+//        btnGPS = findViewById(R.id.btnGPSLoc);
+//        btnNetwork = findViewById(R.id.btnNetworkLoc);
         btncamera = findViewById(R.id.btncamera);
 
-        btnGPS.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPositionGPS();
-            }
-        });
+//        btnGPS.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getPositionGPS();
+//            }
+//        });
 
-        btnNetwork.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getPositionNetwork();
-            }
-        });
+//        btnNetwork.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                getPositionNetwork();
+//            }
+//        });
         btncamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
