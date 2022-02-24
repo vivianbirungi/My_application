@@ -26,7 +26,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication">
         <activity
-            android:name=".verification"
+            android:name=".UserCapture"
+            android:exported="false" />
+        <activity
+            android:name=".Verification"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

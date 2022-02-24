@@ -7,17 +7,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class Verification extends AppCompatActivity {
-private Button verifybtn;
+public class UserCapture extends AppCompatActivity {
+    private Button submitbtn;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_verification);
-        verifybtn = findViewById(R.id.verifybtn);
-        verifybtn.setOnClickListener(new View.OnClickListener() {
+        setContentView(R.layout.activity_user_capture);
+        submitbtn = findViewById(R.id.submitbtn);
+        submitbtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(getApplicationContext(),UserCapture.class);
+                Intent i = new Intent(getApplicationContext(),Camera.class);
                 startActivity(i);
             }
         });
