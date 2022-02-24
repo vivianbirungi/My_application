@@ -62,9 +62,9 @@ public class Camera extends AppCompatActivity {
     private static final int CAMERA_REQUEST = 1888;
     private LocationManager mLocationManagerGPS;
     private LocationListener mLocationListenerGPS;
-    private String txtViewLatGPS;
-    private String txtViewLongGPS;
-    private String txtViewAltGPS;
+    private String txtViewLatGPS ="0.0";
+    private String txtViewLongGPS ="0.0";
+    private String txtViewAltGPS ="0.0";
     private String txtViewLatNetwork;
     private String txtViewLongNetwork;
     private String  txtViewAltNetwork;
@@ -79,7 +79,7 @@ public class Camera extends AppCompatActivity {
     public String photoFileName = "photo.jpg";
     File photoFile;
     private Uri imageUri ;
-
+     private byte[] imageUpload;
 
     private ProgressBar progressBar;
     String currentPhotoPath;
@@ -123,7 +123,7 @@ public class Camera extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (currentPhotoPath != null) {
-                    uploadToFirebase(imageUri);
+                    uploadToFirebase(imageUpload);
                 } else {
                         Toast.makeText(Camera.this,"upload is empty", Toast.LENGTH_SHORT).show();
                 }
@@ -213,12 +213,17 @@ public class Camera extends AppCompatActivity {
 //                e.printStackTrace();
 //            }
             Bitmap bitmap = BitmapFactory.decodeFile(currentPhotoPath);
+
+
             ImageView imageView = findViewById(R.id.imageview);
             imageView.setImageBitmap(bitmap);
             camerabtn.setVisibility(View.GONE);
             videobtn.setVisibility(View.GONE);
             textInputLayout.setVisibility(View.VISIBLE);
             btnsend.setVisibility(View.VISIBLE);
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.WEBP, 100, baos);
+            imageUpload = baos.toByteArray();
         }
     }
 
@@ -296,14 +301,14 @@ public class Camera extends AppCompatActivity {
             }).show();
         }
     }
-    private void uploadToFirebase(Uri uri){
+    private void uploadToFirebase(byte[] uri){
         String uniqueID = UUID.randomUUID().toString();
         StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + uniqueID);
         Long datetime = System.currentTimeMillis();
         Log.d("lat and lon",txtViewLatGPS + txtViewLongGPS );
 
         Timestamp timestamp = new Timestamp(datetime);
-        fileRef.putFile(uri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
+        fileRef.putBytes(uri).addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri1 -> {
             Model model = new Model(uri1.toString(), txtViewLatGPS,txtViewLongGPS,timestamp );
             String modelId = root.push().getKey();
             root.child(modelId).setValue(model);

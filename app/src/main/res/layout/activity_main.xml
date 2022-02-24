@@ -6,118 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewLatGPS"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.402"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/featured_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/btncamera"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.149" />
 
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewLonGPS"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="@+id/txtViewLatGPS"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewAltGPS"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.093"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewLatNetwork"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginTop="69dp"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.093"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="@+id/txtViewAltGPS"-->
-<!--        app:layout_constraintVertical_bias="0.101" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewLonNetwork"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.194"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/txtViewLatNetwork"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/txtViewLatGPS"-->
-<!--        app:layout_constraintVertical_bias="0.234" />-->
-
-<!--    <TextView-->
-<!--        android:id="@+id/txtViewAltNetwork"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="TextView"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.313"-->
-<!--        app:layout_constraintStart_toEndOf="@+id/txtViewLonNetwork"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/txtViewLonGPS"-->
-<!--        app:layout_constraintVertical_bias="0.234" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnGPSLoc"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_marginEnd="32dp"-->
-<!--        android:text="Button"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintVertical_bias="0.568" />-->
-
-<!--    <Button-->
-<!--        android:id="@+id/btnNetworkLoc"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="Button"-->
-<!--        app:layout_constraintBottom_toBottomOf="parent"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintHorizontal_bias="0.949"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toBottomOf="@+id/btnGPSLoc"-->
-<!--        app:layout_constraintVertical_bias="0.287" />-->
-
-    <Button
+    <ImageButton
         android:id="@+id/btncamera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:background="@drawable/roundbtn"
+        android:contentDescription="add image"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.955"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txtViewLonNetwork"
-        app:layout_constraintVertical_bias="0.795" />
+        app:layout_constraintTop_toBottomOf="@+id/featured_recycler"
+        app:layout_constraintVertical_bias="0.944"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+    <!--    <ImageButton-->
 <!--        android:id="@+id/btncamera"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_gravity="bottom|right"-->
-<!--        android:layout_margin="16dp"-->
-<!--        android:background="@color/teal_700"-->
-<!--        android:contentDescription="fab_content_desc"-->
-<!--        app:backgroundTint="@color/teal_700"-->
-<!--        app:srcCompat="@drawable/ic_baseline_add_24" />-->
+<!--        android:layout_width="8dp"-->
+<!--        android:layout_height="196dp"-->
+<!--        android:background="@drawable/roundbtn"-->
+<!--        android:contentDescription="add image"-->
+<!--        android:src="@drawable/ic_baseline_add_24"-->
+<!--        android:text="Button"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.652"-->
+<!--        app:layout_constraintStart_toStartOf="@id/featured_recycler"-->
+<!--        app:layout_constraintTop_toBottomOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.80" />-->
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

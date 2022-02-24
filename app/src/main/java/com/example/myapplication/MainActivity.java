@@ -3,6 +3,8 @@ package com.example.myapplication;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 //location
 import android.Manifest;
 import android.content.Context;
@@ -20,9 +22,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.myapplication.HelperClasses.HomeAdapter.FeaturedAdapter;
+import com.example.myapplication.HelperClasses.HomeAdapter.FeaturedHelperClass;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     private LocationManager mLocationManagerGPS;
@@ -42,18 +50,16 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnGPS;
     private Button btnNetwork;
-    private Button btncamera;
+    private ImageButton btncamera;
+    RecyclerView featuredRecycler;
+    RecyclerView.Adapter Adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-//        txtViewLatGPS = findViewById(R.id.txtViewLatGPS);
-//        txtViewLongGPS = findViewById(R.id.txtViewLonGPS);
-//        txtViewAltGPS = findViewById(R.id.txtViewAltGPS);
-
-//        txtViewLatNetwork = findViewById(R.id.txtViewLatNetwork);
-//        txtViewLongNetwork = findViewById(R.id.txtViewLonNetwork);
-//        txtViewAltNetwork = findViewById(R.id.txtViewAltNetwork);
+        featuredRecycler = findViewById(R.id.featured_recycler);
+        featuredRecycler();
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 //                requestLocationPermission();
@@ -91,6 +97,19 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+    private void featuredRecycler() {
+        featuredRecycler.setHasFixedSize(true);
+        featuredRecycler.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        ArrayList<FeaturedHelperClass> featuredLocations = new ArrayList<>();
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.ic_launcher_background, "Mcdonald's", "am trying to check it out"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.ic_launcher_background, "Vivian's", "am trying to check it out"));
+        featuredLocations.add(new FeaturedHelperClass(R.drawable.ic_launcher_background, "Birungi's", "am trying to check it out"));
+      Adapter = new FeaturedAdapter(featuredLocations);
+      featuredRecycler.setAdapter(Adapter);
+
+    }
+
     private void getPositionGPS() {
         mLocationManagerGPS = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
 
